@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contador de Likes - Tiempo Real</title>
+  <style>
+    body {
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #ffd6f0 0%, #e9d1ff 100%);
+      color: #2a2a2a;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      text-align: center;
+      width: 320px;
+    }
+    h1 { margin: 0 0 16px 0; font-size: 20px; color:#6b0f7a; }
+    #likes { font-size: 48px; margin: 12px 0; color: #ff4da6; }
+    button {
+      background: linear-gradient(90deg,#ff4da6,#a84dff);
+      border: none;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.1s;
+    }
+    button:active { transform: scale(0.96); }
+    .small { font-size: 12px; margin-top: 10px; color:#666; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Contador de Likes — Tiempo Real</h1>
+    <div id="likes">0</div>
+    <button id="btn-like">Dar Like ❤️</button>
+    <div class="small">Abre varias pestañas para probar</div>
+  </div>
+
+  <!-- Socket.IO client (CDN) -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    // 🔹 URL de tu backend
+    const SERVER_URL = "http://localhost:3000";
+
+    // Conexión Socket.IO
+    const socket = io(SERVER_URL);
+
+    const likesEl = document.getElementById('likes');
+    const btnLike = document.getElementById('btn-like');
+
+    // Actualiza el contador cuando llega evento del servidor
+    socket.on('likeUpdated', (newLikes) => {
+      likesEl.textContent = newLikes;
+    });
+
+    // Obtener el valor inicial al cargar la página
+    async function fetchLikes() {
+      try {
+        // Usamos new URL() para evitar doble barra //
+        const res = await fetch(new URL('/', SERVER_URL));
+        if (!res.ok) throw new Error('Error al obtener likes');
+        const data = await res.json();
+        likesEl.textContent = data.likes;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchLikes();
+
+    // Al pulsar el botón, enviar POST /like
+    btnLike.addEventListener('click', async () => {
+      try {
+        await fetch(new URL('/like', SERVER_URL), { method: 'POST' });
+        // El contador se actualizará automáticamente por Socket.IO
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
