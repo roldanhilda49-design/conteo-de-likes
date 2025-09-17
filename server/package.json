@@ -1,0 +1,29 @@
+{
+  "name": "likes-realtime-server",
+  "version": "1.0.0",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roldanhilda49-design/conteo-de-likes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/roldanhilda49-design/conteo-de-likes/issues"
+  },
+  "homepage": "https://github.com/roldanhilda49-design/conteo-de-likes#readme"
+}
