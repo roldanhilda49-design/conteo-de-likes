@@ -84,43 +84,44 @@
 
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
-const SERVER_URL = "http://localhost:3000"; // Cambiar a tu servidor al desplegar
+  // URL de tu backend en Render
+  const SERVER_URL = "https://conteo-de-likes-3.onrender.com";
 
-const likesEl = document.getElementById('likes');
-const btnLike = document.getElementById('btn-like');
-const loadingEl = document.getElementById('loading');
+  const likesEl = document.getElementById('likes');
+  const btnLike = document.getElementById('btn-like');
+  const loadingEl = document.getElementById('loading');
 
-const socket = io(SERVER_URL);
+  const socket = io(SERVER_URL);
 
-// Actualizar contador en tiempo real
-socket.on('likeUpdated', (newLikes) => {
-  likesEl.textContent = newLikes;
-  likesEl.classList.add('liked');
-  setTimeout(() => likesEl.classList.remove('liked'), 300);
-});
+  // Actualizar contador en tiempo real
+  socket.on('likeUpdated', (newLikes) => {
+    likesEl.textContent = newLikes;
+    likesEl.classList.add('liked');
+    setTimeout(() => likesEl.classList.remove('liked'), 300);
+  });
 
-// Obtener contador inicial
-async function fetchLikes() {
-  try {
-    const res = await fetch(`${SERVER_URL}/like-count`);
-    const data = await res.json();
-    likesEl.textContent = data.likes;
-    loadingEl.style.display = 'none';
-  } catch (err) {
-    console.error(err);
-    loadingEl.textContent = 'Error al cargar los likes';
+  // Obtener contador inicial
+  async function fetchLikes() {
+    try {
+      const res = await fetch(`${SERVER_URL}/`);
+      const data = await res.json();
+      likesEl.textContent = data.likes;
+      loadingEl.style.display = 'none';
+    } catch (err) {
+      console.error(err);
+      loadingEl.textContent = 'Error al cargar los likes';
+    }
   }
-}
-fetchLikes();
+  fetchLikes();
 
-// Botón dar like
-btnLike.addEventListener('click', async () => {
-  try {
-    await fetch(`${SERVER_URL}/like`, { method: 'POST' });
-  } catch (err) {
-    console.error(err);
-  }
-});
+  // Botón dar like
+  btnLike.addEventListener('click', async () => {
+    try {
+      await fetch(`${SERVER_URL}/like`, { method: 'POST' });
+    } catch (err) {
+      console.error(err);
+    }
+  });
 </script>
 
 </body>
