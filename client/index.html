@@ -62,14 +62,6 @@
     100% { transform: scale(1); }
   }
 
-  /* Mensaje de carga */
-  #loading {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #fff;
-    opacity: 0.8;
-  }
-
   @media (max-width: 600px) {
     h1 { font-size: 2rem; }
     button { padding: 12px 25px; font-size: 1rem; }
@@ -80,7 +72,6 @@
 
 <h1>Likes: <span id="likes">0</span></h1>
 <button id="btn-like">Dar Like ❤️</button>
-<div id="loading">Cargando...</div>
 
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
@@ -89,7 +80,6 @@
 
   const likesEl = document.getElementById('likes');
   const btnLike = document.getElementById('btn-like');
-  const loadingEl = document.getElementById('loading');
 
   const socket = io(SERVER_URL);
 
@@ -106,10 +96,8 @@
       const res = await fetch(`${SERVER_URL}/`);
       const data = await res.json();
       likesEl.textContent = data.likes;
-      loadingEl.style.display = 'none';
     } catch (err) {
-      console.error(err);
-      loadingEl.textContent = 'Error al cargar los likes';
+      console.error('No se pudo cargar el contador:', err);
     }
   }
   fetchLikes();
@@ -119,7 +107,7 @@
     try {
       await fetch(`${SERVER_URL}/like`, { method: 'POST' });
     } catch (err) {
-      console.error(err);
+      console.error('Error al dar like:', err);
     }
   });
 </script>
